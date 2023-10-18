@@ -28,5 +28,29 @@ namespace ABC123_HFT_2023241.Models
 
         [Range(0,300000)]
         public int DailyRentalCost { get; set; }
+
+        
+
+        public Car() { }
+
+        public Car(string line)
+        {
+            string[] parts = line.Split(',');
+            if (parts.Length == 6)
+            {
+                if (int.TryParse(parts[0], out int carID))
+                    CarID = carID;
+
+                Brand = parts[1];
+                Model = parts[2];
+                LicencePlate = parts[3];
+
+                if (int.TryParse(parts[4], out int year))
+                    Year = year;
+
+                if (int.TryParse(parts[5], out int cost))
+                    DailyRentalCost = cost;
+            }
+        }
     }
 }

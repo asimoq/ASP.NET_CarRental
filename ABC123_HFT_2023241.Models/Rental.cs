@@ -20,5 +20,29 @@ namespace ABC123_HFT_2023241.Models
         
         public DateTime RentalStart { get; set; }
         public DateTime RentalEnd { get; set; }
+
+        public Rental() { }
+
+        public Rental(string line)
+        {
+            string[] parts = line.Split(',');
+            if (parts.Length == 5)
+            {
+                if (int.TryParse(parts[0], out int rentalId))
+                    RentalId = rentalId;
+
+                if (int.TryParse(parts[1], out int carId))
+                    CarId = carId;
+
+                if (int.TryParse(parts[2], out int customerId))
+                    CustomerId = customerId;
+
+                if (DateTime.TryParseExact(parts[3], "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime rentalStart))
+                    RentalStart = rentalStart;
+
+                if (DateTime.TryParseExact(parts[4], "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime rentalEnd))
+                    RentalEnd = rentalEnd;
+            }
+        }
     }
 }
