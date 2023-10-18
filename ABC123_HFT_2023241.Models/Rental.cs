@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ABC123_HFT_2023241.Models
 {
-    internal class Renatl
+    public class Rental
     {
+        public int RentalId { get; set; }
+        public int CarId { get; set; }
+        public int CustomerId { get; set; }
+        public DateTime RentalStart { get; set; }
+        public DateTime RentalEnd { get; set; }
     }
 }
