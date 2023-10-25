@@ -28,13 +28,25 @@ namespace ABC123_HFT_2023241.Repository
             }
         }
 
+        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Car>();
 
             modelBuilder.Entity<Customer>();
 
-            modelBuilder.Entity<Rental>();
+            
+
+            modelBuilder.Entity<Rental>()
+                .HasOne(r => r.CarID)
+                .WithMany(c => c.Rentals)
+                .HasForeignKey(r => r.CarId);
+
+            modelBuilder.Entity<Rental>()
+                .HasOne(r => r.Customer)
+                .WithMany(c => c.Rentals)
+                .HasForeignKey(r => r.CustomerId);
         }
 
 
