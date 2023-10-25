@@ -14,10 +14,16 @@ namespace ABC123_HFT_2023241.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RentalId { get; set; }
 
-        
         public int CarId { get; set; }
         public int CustomerId { get; set; }
-        
+
+        [ForeignKey("CarId")]
+        public Car Car { get; set; }
+
+        [ForeignKey("CustomerId")]
+        public Customer Customer { get; set; }
+
+
         public DateTime RentalStart { get; set; }
         public DateTime RentalEnd { get; set; }
 

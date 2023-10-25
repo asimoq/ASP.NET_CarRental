@@ -1,4 +1,6 @@
 ﻿using System;
+using TAG8GJ_HFT_2023241.Models;
+using TAG8GJ_HFT_2023241.Repository;
 
 namespace TAG8GJ_HFT_2023241.Client
 {
@@ -7,6 +9,8 @@ namespace TAG8GJ_HFT_2023241.Client
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+
             
         }
     }

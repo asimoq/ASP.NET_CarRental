@@ -23,7 +23,8 @@ namespace ABC123_HFT_2023241.Models
         [StringLength(30)]
         public string CustomerPhone { get; set; }
 
-        
+        public ICollection<Rental> Rentals { get; set; }
+
 
         public Customer() { }
 

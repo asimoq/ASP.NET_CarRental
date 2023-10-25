@@ -29,7 +29,9 @@ namespace ABC123_HFT_2023241.Models
         [Range(0,300000)]
         public int DailyRentalCost { get; set; }
 
-        
+        public ICollection<Rental> Rentals { get; set; }
+
+
 
         public Car() { }
 
