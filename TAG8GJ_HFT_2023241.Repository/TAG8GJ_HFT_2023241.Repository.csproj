@@ -26,5 +26,8 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\TAG8GJ_HFT_2023241.Models\TAG8GJ_HFT_2023241.Models.csproj" />
+	</ItemGroup>
 
 </Project>

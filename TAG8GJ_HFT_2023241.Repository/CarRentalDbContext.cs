@@ -1,8 +1,8 @@
-﻿using ABC123_HFT_2023241.Models;
+﻿using TAG8GJ_HFT_2023241.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace ABC123_HFT_2023241.Repository
+namespace TAG8GJ_HFT_2023241.Repository
 {
     public class CarRentalDbContext : DbContext
     {
@@ -52,7 +52,7 @@ namespace ABC123_HFT_2023241.Repository
 
             // Cars tábla kezdeti adatok
             modelBuilder.Entity<Car>().HasData(
-                new Car { CarID = 1, Brand = "Toyota", Model = "Camry", LicencePlate = "ABC123", Year = 2020, DailyRentalCost = 50 },
+                new Car { CarID = 1, Brand = "Toyota", Model = "Camry", LicencePlate = "TAG8GJ", Year = 2020, DailyRentalCost = 50 },
                 new Car { CarID = 2, Brand = "Honda", Model = "Civic", LicencePlate = "XYZ789", Year = 2019, DailyRentalCost = 45 },
                 new Car { CarID = 3, Brand = "Ford", Model = "Focus", LicencePlate = "EFG456", Year = 2022, DailyRentalCost = 55 },
                 new Car { CarID = 4, Brand = "Chevrolet", Model = "Malibu", LicencePlate = "LMN789", Year = 2021, DailyRentalCost = 48 },
