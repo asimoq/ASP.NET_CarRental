@@ -18,10 +18,10 @@ namespace TAG8GJ_HFT_2023241.Models
         public int CustomerId { get; set; }
 
         [ForeignKey("CarId")]
-        public Car Car { get; set; }
+        public virtual Car Car { get; set; }
 
         [ForeignKey("CustomerId")]
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
 
 
         public DateTime RentalStart { get; set; }

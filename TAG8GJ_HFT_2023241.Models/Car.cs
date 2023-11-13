@@ -29,7 +29,7 @@ namespace TAG8GJ_HFT_2023241.Models
         [Range(0,300000)]
         public int DailyRentalCost { get; set; }
 
-        public ICollection<Rental> Rentals { get; set; }
+        public virtual ICollection<Rental> Rentals { get; set; }
 
 
 

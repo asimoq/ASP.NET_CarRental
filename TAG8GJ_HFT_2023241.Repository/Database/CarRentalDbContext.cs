@@ -22,11 +22,10 @@ namespace TAG8GJ_HFT_2023241.Repository
         {
             if(!builder.IsConfigured)
             {
-                string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\car_rental.mdf;Integrated Security=True;MultipleActiveResultsSets = true";
-
                 builder
                     .UseLazyLoadingProxies()
-                    .UseSqlServer(conn);
+                    .UseInMemoryDatabase("Cars");
+                    
             }
         }
 
