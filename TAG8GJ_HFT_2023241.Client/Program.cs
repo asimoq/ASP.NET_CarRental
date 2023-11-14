@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ConsoleTools;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using TAG8GJ_HFT_2023241.Logic;
 using TAG8GJ_HFT_2023241.Models;
 using TAG8GJ_HFT_2023241.Repository;
 
@@ -10,26 +12,68 @@ namespace TAG8GJ_HFT_2023241.Client
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var ctx = new CarRentalDbContext();
 
-            IRepository<Car> repo = new CarRepository(new CarRentalDbContext());
+            var carRepo = new CarRepository(ctx);
+            var customerRepo = new CustomerRepository(ctx);
+            var rentalRepo = new RentalRepository(ctx);
 
-            Car car = new Car()
-            {
-                Brand = "Tesla",
-                Model = "model X",
+            var carLogic = new CarLogic(carRepo);
+            var customerLogic = new CustomerLogic(customerRepo);
+            var rentalLogic = new RentalLogic(rentalRepo);
 
-            };
+            
+            
+            var carSubMenu = new ConsoleMenu(args, level: 1)
+               .Add("List", () => List("Car"))
+               .Add("Create", () => Create("Car"))
+               .Add("Delete", () => Delete("Car"))
+               .Add("Update", () => Update("Car"))
+               .Add("Exit", ConsoleMenu.Close);
 
-            repo.Create(car);
+            var customersSubMenu = new ConsoleMenu(args, level: 1)
+               .Add("List", () => List("Customer"))
+               .Add("Create", () => Create("Customer"))
+               .Add("Delete", () => Delete("Customer"))
+               .Add("Update", () => Update("Customer"))
+               .Add("Exit", ConsoleMenu.Close);
 
-            var another = repo.Read(1);
-            another.Model = "Sajtostangli2000";
-            repo.Update(another);
+            var rentalRecordsSubMenu = new ConsoleMenu(args, level: 1)
+               .Add("List", () => List("Rental"))
+               .Add("Create", () => Create("Rental"))
+               .Add("Delete", () => Delete("Rental"))
+               .Add("Update", () => Update("Rental"))
+               .Add("Exit", ConsoleMenu.Close);
 
-            var items = repo.ReadAll().ToArray();
 
-            ;
+            var menu = new ConsoleMenu(args, level: 0)
+                 .Add("Cars", () => carSubMenu.Show())
+                 .Add("Customers", () => customersSubMenu.Show())
+                 .Add("RentalRecords", () => rentalRecordsSubMenu.Show())
+                 .Add("Exit", ConsoleMenu.Close);
+
+            menu.Show();
+
+        }
+
+        private static void Update(string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void Delete(string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void List(string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void Create(string v)
+        {
+            throw new NotImplementedException();
         }
     }
 }
