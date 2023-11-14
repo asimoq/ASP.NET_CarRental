@@ -1,6 +1,7 @@
 ﻿using TAG8GJ_HFT_2023241.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using TAG8GJ_HFT_2023241.Models.ModelClasses;
 
 namespace TAG8GJ_HFT_2023241.Repository
 {

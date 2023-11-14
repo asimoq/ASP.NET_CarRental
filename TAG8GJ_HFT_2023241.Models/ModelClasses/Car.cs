@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace TAG8GJ_HFT_2023241.Models
 {
     public class Car
@@ -23,10 +24,10 @@ namespace TAG8GJ_HFT_2023241.Models
         [StringLength(20)]
         public string LicencePlate { get; set; }
 
-        [Range(1950,2500)]
+        [Range(1950, 2500)]
         public int Year { get; set; }
 
-        [Range(0,300000)]
+        [Range(0, 300000)]
         public int DailyRentalCost { get; set; }
 
         public virtual ICollection<Rental> Rentals { get; set; }
