@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TAG8GJ_HFT_2023241.Models.ModelClasses;
+using TAG8GJ_HFT_2023241.Models;
 
 namespace TAG8GJ_HFT_2023241.Logic
 {
