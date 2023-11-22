@@ -43,6 +43,7 @@ namespace TAG8GJ_HFT_2023241.Client
                .Add("Create", () => Create("Rental"))
                .Add("Delete", () => Delete("Rental"))
                .Add("Update", () => Update("Rental"))
+               .Add("Calculate Rental Cost", () => CalculateRentalCost())
                .Add("Exit", ConsoleMenu.Close);
 
 
@@ -53,7 +54,29 @@ namespace TAG8GJ_HFT_2023241.Client
                  .Add("Exit", ConsoleMenu.Close);
 
             menu.Show();
+        }
 
+        private static void CalculateRentalCost()
+        {
+            Console.Write("Enter Rental ID to calculate cost: ");
+            if (int.TryParse(Console.ReadLine(), out int rentalId))
+            {
+                try
+                {
+                    decimal cost = rentalLogic.CalculateRentalCost(rentalId);
+                    Console.WriteLine($"The rental cost for ID {rentalId} is: ${cost}");
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a valid Rental ID.");
+            }
+
+            Console.ReadLine();
         }
 
         private static void SearchCustomerByName()

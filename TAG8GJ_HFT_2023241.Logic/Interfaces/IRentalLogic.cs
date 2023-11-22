@@ -10,5 +10,6 @@ namespace TAG8GJ_HFT_2023241.Logic
         Rental Read(int id);
         IQueryable<Rental> ReadAll();
         void Update(Rental entity);
+        decimal CalculateRentalCost(int rentalId);
     }
 }
