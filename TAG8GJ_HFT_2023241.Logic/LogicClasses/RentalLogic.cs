@@ -20,8 +20,7 @@ namespace TAG8GJ_HFT_2023241.Logic
 
         public void Create(Rental entity)
         {
-            if (entity.Car == null) throw new ArgumentException("You need to add an existing car");
-            if (entity.Customer == null) throw new ArgumentException("You need to add an existing customer");
+            
             repo.Create(entity);
         }
 

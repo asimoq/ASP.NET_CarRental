@@ -10,5 +10,6 @@ namespace TAG8GJ_HFT_2023241.Logic
         Customer Read(int id);
         IQueryable<Customer> ReadAll();
         void Update(Customer entity);
+        IQueryable<Customer> SearchByName(string name);
     }
 }
