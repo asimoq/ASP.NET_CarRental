@@ -20,7 +20,11 @@ namespace TAG8GJ_HFT_2023241.Logic
 
         public void Create(Rental entity)
         {
-            
+            if (entity.RentalStart > entity.RentalEnd)
+            {
+                throw new ArgumentException("Start date cannot be later than end date");
+            }
+
             repo.Create(entity);
         }
 
@@ -49,18 +53,18 @@ namespace TAG8GJ_HFT_2023241.Logic
         //non CRUD
 
         public decimal CalculateRentalCost(int rentalId)
+    {
+        var rental = repo.Read(rentalId);
+
+        if (rental == null)
         {
-            var rental = repo.Read(rentalId);
-
-            if (rental == null)
-            {
-                throw new ArgumentException($"No rental found with ID: {rentalId}");
-            }
-
-            int rentalDuration = (int)(rental.RentalEnd - rental.RentalStart).TotalDays + 1;
-            decimal dailyRentalCost = rental.Car.DailyRentalCost;
-
-            return rentalDuration * dailyRentalCost;
+            throw new ArgumentException($"No rental found with ID: {rentalId}");
         }
+
+        int rentalDuration = (int)(rental.RentalEnd - rental.RentalStart).TotalDays + 1;
+        decimal dailyRentalCost = rental.Car.DailyRentalCost;
+
+        return rentalDuration * dailyRentalCost;
+    }
     }
 }
