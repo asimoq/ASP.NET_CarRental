@@ -45,5 +45,12 @@ namespace TAG8GJ_HFT_2023241.Logic
         {
             repo.Update(entity);
         }
+
+        //non-CRUD
+
+        public IQueryable<Customer> SearchByName(string name)
+        {
+            return repo.ReadAll().Where(c => c.CustomerName.Contains(name, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }
