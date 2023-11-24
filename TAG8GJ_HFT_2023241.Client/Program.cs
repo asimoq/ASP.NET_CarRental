@@ -1,27 +1,24 @@
 ﻿using ConsoleTools;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using TAG8GJ_HFT_2023241.Logic;
 using TAG8GJ_HFT_2023241.Models;
-using TAG8GJ_HFT_2023241.Repository;
+
 
 namespace TAG8GJ_HFT_2023241.Client
 {
     internal class Program
     {
-        private static readonly CarRentalDbContext ctx = new CarRentalDbContext();
-
-        private static readonly IRepository<Car> carRepo = new CarRepository(ctx);
-        private static readonly IRepository<Customer> customerRepo = new CustomerRepository(ctx);
-        private static readonly IRepository<Rental> rentalRepo = new RentalRepository(ctx);
-
-        private static readonly ICarLogic carLogic = new CarLogic(carRepo);
-        private static readonly ICustomerLogic customerLogic = new CustomerLogic(customerRepo);
-        private static readonly IRentalLogic rentalLogic = new RentalLogic(rentalRepo);
+        static RestService rest;
 
         static void Main(string[] args)
-        {  
+        {
+            Console.WriteLine("Program started.");
+
+            rest = new RestService("http://localhost:52322/","car");
+
+            Console.WriteLine("Program started.");
             var carSubMenu = new ConsoleMenu(args, level: 1)
                .Add("List", () => List("Car"))
                .Add("Create", () => Create("Car"))
@@ -63,7 +60,7 @@ namespace TAG8GJ_HFT_2023241.Client
             {
                 try
                 {
-                    decimal cost = rentalLogic.CalculateRentalCost(rentalId);
+                    decimal cost = rest.GetSingle<decimal>($"rental/{rentalId}/CalculateCost");
                     Console.WriteLine($"The rental cost for ID {rentalId} is: ${cost}");
                 }
                 catch (ArgumentException ex)
@@ -84,7 +81,7 @@ namespace TAG8GJ_HFT_2023241.Client
             Console.Write("Enter customer name to search: ");
             string nameToSearch = Console.ReadLine();
 
-            var customers = customerLogic.SearchByName(nameToSearch);
+            var customers = rest.Get<Customer>($"customer/SearchByName?name={nameToSearch}");
 
             if (customers.Any())
             {
@@ -105,9 +102,9 @@ namespace TAG8GJ_HFT_2023241.Client
         private static void CarsBelowCertainCost()
         {
             Console.Write("Enter maximum daily rental cost: ");
-            if (int.TryParse(Console.ReadLine(), out int maxCost))
-            {
-                var cars = carLogic.CarsBelowCertainCost(maxCost);
+            if (int.TryParse(Console.ReadLine(), out int rentalCost))
+            { 
+                var cars = rest.Get<Car>($"car/CarsBelowCertainCost?rentalCost={rentalCost}");
 
                 if (cars.Any())
                 {
@@ -119,7 +116,7 @@ namespace TAG8GJ_HFT_2023241.Client
                 }
                 else
                 {
-                    Console.WriteLine($"No cars below the specified cost of {maxCost}.");
+                    Console.WriteLine($"No cars below the specified cost of {rentalCost}.");
                 }
             }
             else
@@ -140,7 +137,7 @@ namespace TAG8GJ_HFT_2023241.Client
                 switch (entityType)
                 {
                     case "Car":
-                        var carToUpdate = carLogic.Read(id);
+                        var carToUpdate = rest.GetSingle<Car>($"car/{id}");
                         if (carToUpdate != null)
                         {
                             Console.Write("Enter new Brand: ");
@@ -149,8 +146,7 @@ namespace TAG8GJ_HFT_2023241.Client
                             Console.Write("Enter new Model: ");
                             carToUpdate.Model = Console.ReadLine();
 
-                            
-                            carLogic.Update(carToUpdate);
+                            rest.Put(carToUpdate, "car");
                             Console.WriteLine("Car updated successfully!");
                         }
                         else
@@ -160,7 +156,7 @@ namespace TAG8GJ_HFT_2023241.Client
                         break;
 
                     case "Customer":
-                        var customerToUpdate = customerLogic.Read(id);
+                        var customerToUpdate = rest.GetSingle<Customer>($"customer/{id}");
                         if (customerToUpdate != null)
                         {
                             Console.Write("Enter new CustomerName: ");
@@ -169,8 +165,7 @@ namespace TAG8GJ_HFT_2023241.Client
                             Console.Write("Enter new CustomerEmail: ");
                             customerToUpdate.CustomerEmail = Console.ReadLine();
 
-                            
-                            customerLogic.Update(customerToUpdate);
+                            rest.Put(customerToUpdate, "customer");
                             Console.WriteLine("Customer updated successfully!");
                         }
                         else
@@ -180,66 +175,54 @@ namespace TAG8GJ_HFT_2023241.Client
                         break;
 
                     case "Rental":
-                        Console.Write("Enter Rental ID to update: ");
-                        if (int.TryParse(Console.ReadLine(), out int rentalId))
+                        var currentRental = rest.GetSingle<Rental>($"rental/{id}");
+                        if (currentRental != null)
                         {
-                            
-                            var currentRental = rentalLogic.Read(rentalId);
-                            if (currentRental != null)
+                            Console.WriteLine("Current Rental Details:");
+                            Console.WriteLine($"Car ID: {currentRental.CarId}");
+                            Console.WriteLine($"Customer ID: {currentRental.CustomerId}");
+                            Console.WriteLine($"Rental Start Date: {currentRental.RentalStart}");
+                            Console.WriteLine($"Rental End Date: {currentRental.RentalEnd}");
+
+                            var updatedRental = new Rental();
+                            updatedRental.RentalId = id;
+
+                            Console.Write("Enter new Car ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int newCarId))
                             {
-                                Console.WriteLine("Current Rental Details:");
-                                Console.WriteLine($"Car ID: {currentRental.CarId}");
-                                Console.WriteLine($"Customer ID: {currentRental.CustomerId}");
-                                Console.WriteLine($"Rental Start Date: {currentRental.RentalStart}");
-                                Console.WriteLine($"Rental End Date: {currentRental.RentalEnd}");
-
-                                
-                                var updatedRental = new Rental();
-                                updatedRental.RentalId = rentalId;
-
-                                Console.Write("Enter new Car ID: ");
-                                if (int.TryParse(Console.ReadLine(), out int newCarId))
-                                {
-                                    updatedRental.CarId = newCarId;
-                                }
-
-                                Console.Write("Enter new Customer ID: ");
-                                if (int.TryParse(Console.ReadLine(), out int newCustomerId))
-                                {
-                                    updatedRental.CustomerId = newCustomerId;
-                                }
-
-                                Console.Write("Enter new Rental Start Date (yyyy/MM/dd): ");
-                                if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime newRentalStart))
-                                {
-                                    updatedRental.RentalStart = newRentalStart;
-                                }
-
-                                Console.Write("Enter new Rental End Date (yyyy/MM/dd): ");
-                                if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime newRentalEnd))
-                                {
-                                    updatedRental.RentalEnd = newRentalEnd;
-                                }
-
-                                
-                                rentalLogic.Update(updatedRental);
-                                Console.WriteLine("Rental updated successfully!");
+                                updatedRental.CarId = newCarId;
                             }
-                            else
+
+                            Console.Write("Enter new Customer ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int newCustomerId))
                             {
-                                Console.WriteLine($"Rental with ID {rentalId} not found.");
+                                updatedRental.CustomerId = newCustomerId;
                             }
+
+                            Console.Write("Enter new Rental Start Date (yyyy/MM/dd): ");
+                            if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime newRentalStart))
+                            {
+                                updatedRental.RentalStart = newRentalStart;
+                            }
+
+                            Console.Write("Enter new Rental End Date (yyyy/MM/dd): ");
+                            if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime newRentalEnd))
+                            {
+                                updatedRental.RentalEnd = newRentalEnd;
+                            }
+
+                            rest.Put(updatedRental, "rental");
+                            Console.WriteLine("Rental updated successfully!");
                         }
                         else
                         {
-                            Console.WriteLine("Invalid Rental ID format.");
+                            Console.WriteLine($"Rental with ID {id} not found.");
                         }
                         break;
 
                     default:
                         Console.WriteLine("Invalid entity type!");
                         break;
-                
                 }
             }
             else
@@ -247,8 +230,9 @@ namespace TAG8GJ_HFT_2023241.Client
                 Console.WriteLine("Invalid input! Please enter a valid ID.");
             }
 
-            Console.ReadLine(); 
+            Console.ReadLine();
         }
+
 
         private static void Delete(string entityType)
         {
@@ -260,10 +244,10 @@ namespace TAG8GJ_HFT_2023241.Client
                 switch (entityType)
                 {
                     case "Car":
-                        var carToDelete = carLogic.Read(id);
+                        var carToDelete = rest.Get<Car>(id, "car");
                         if (carToDelete != null)
                         {
-                            carLogic.Delete(id);
+                            rest.Delete(id, "car");
                             Console.WriteLine("Car deleted successfully!");
                         }
                         else
@@ -273,10 +257,10 @@ namespace TAG8GJ_HFT_2023241.Client
                         break;
 
                     case "Customer":
-                        var customerToDelete = customerLogic.Read(id);
+                        var customerToDelete = rest.Get<Customer>(id, "customer");
                         if (customerToDelete != null)
                         {
-                            customerLogic.Delete(id);
+                            rest.Delete(id, "customer");
                             Console.WriteLine("Customer deleted successfully!");
                         }
                         else
@@ -286,10 +270,10 @@ namespace TAG8GJ_HFT_2023241.Client
                         break;
 
                     case "Rental":
-                        var rentalToDelete = rentalLogic.Read(id);
+                        var rentalToDelete = rest.Get<Rental>(id,"rental");
                         if (rentalToDelete != null)
                         {
-                            rentalLogic.Delete(id);
+                            rest.Delete(id, "rental");
                             Console.WriteLine("Rental deleted successfully!");
                         }
                         else
@@ -319,7 +303,7 @@ namespace TAG8GJ_HFT_2023241.Client
             switch (entityType)
             {
                 case "Car":
-                    var cars = carLogic.ReadAll();
+                    var cars = rest.Get<Car>("car");
                     foreach (var car in cars)
                     {
                         Console.WriteLine($"{car.CarID}. {car.Brand} {car.Model} - {car.DailyRentalCost} per day");
@@ -327,7 +311,7 @@ namespace TAG8GJ_HFT_2023241.Client
                     break;
 
                 case "Customer":
-                    var customers = customerLogic.ReadAll();
+                    var customers = rest.Get<Customer>("customer");
                     foreach (var customer in customers)
                     {
                         Console.WriteLine($"{customer.CustomerId}. {customer.CustomerName} ({customer.CustomerEmail}) - {customer.CustomerPhone}");
@@ -335,7 +319,7 @@ namespace TAG8GJ_HFT_2023241.Client
                     break;
 
                 case "Rental":
-                    var rentals = rentalLogic.ReadAll();
+                    var rentals = rest.Get<Rental>("rental");
                     foreach (var rental in rentals)
                     {
                         Console.WriteLine($"{rental.RentalId}. Car: {rental.Car.Brand} {rental.Car.Model}, Customer: {rental.Customer.CustomerName}, Rental Period: {rental.RentalStart.ToShortDateString()} to {rental.RentalEnd.ToShortDateString()}");
@@ -347,7 +331,7 @@ namespace TAG8GJ_HFT_2023241.Client
                     break;
             }
 
-            Console.ReadLine(); // Wait for user input
+            Console.ReadLine(); 
         }
 
         private static void Create(string entityType)
@@ -359,17 +343,29 @@ namespace TAG8GJ_HFT_2023241.Client
             {
                 case "Car":
                     var newCar = new Car();
+
                     Console.Write("Enter Brand: ");
                     newCar.Brand = Console.ReadLine();
+
                     Console.Write("Enter Model: ");
                     newCar.Model = Console.ReadLine();
+
+                    Console.Write("Enter Licence Plate: ");
+                    newCar.LicencePlate = Console.ReadLine();
+
+                    Console.Write("Enter Year: ");
+                    if (int.TryParse(Console.ReadLine(), out int year))
+                    {
+                        newCar.Year = year;
+                    }
+
                     Console.Write("Enter Daily Rental Cost: ");
                     if (int.TryParse(Console.ReadLine(), out int dailyRentalCost))
                     {
                         newCar.DailyRentalCost = dailyRentalCost;
                     }
-                    // Add other properties as needed
-                    carLogic.Create(newCar);
+
+                    rest.Post(newCar, "car");
                     Console.WriteLine("Car created successfully!");
                     break;
 
@@ -381,8 +377,8 @@ namespace TAG8GJ_HFT_2023241.Client
                     newCustomer.CustomerEmail = Console.ReadLine();
                     Console.Write("Enter CustomerPhone: ");
                     newCustomer.CustomerPhone = Console.ReadLine();
-                    // Add other properties as needed
-                    customerLogic.Create(newCustomer);
+                    
+                    rest.Post(newCustomer, "customer");
                     Console.WriteLine("Customer created successfully!");
                     break;
 
@@ -408,8 +404,8 @@ namespace TAG8GJ_HFT_2023241.Client
                     {
                         newRental.RentalEnd = rentalEnd;
                     }
-                    // Add other properties as needed
-                    rentalLogic.Create(newRental);
+                    
+                    rest.Post(newRental, "rental");
                     Console.WriteLine("Rental created successfully!");
                     break;
 
@@ -418,7 +414,7 @@ namespace TAG8GJ_HFT_2023241.Client
                     break;
             }
 
-            Console.ReadLine(); // Wait for user input
+            Console.ReadLine(); 
         }
     }
 }
