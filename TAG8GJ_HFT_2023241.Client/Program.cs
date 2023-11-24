@@ -14,11 +14,11 @@ namespace TAG8GJ_HFT_2023241.Client
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Program started.");
+            Console.WriteLine("Program started. Waiting for server connection...");
 
             rest = new RestService("http://localhost:52322/","car");
 
-            Console.WriteLine("Program started.");
+            
             var carSubMenu = new ConsoleMenu(args, level: 1)
                .Add("List", () => List("Car"))
                .Add("Create", () => Create("Car"))
@@ -134,96 +134,99 @@ namespace TAG8GJ_HFT_2023241.Client
             Console.Write("Enter ID: ");
             if (int.TryParse(Console.ReadLine(), out int id))
             {
-                switch (entityType)
+                try
                 {
-                    case "Car":
-                        var carToUpdate = rest.GetSingle<Car>($"car/{id}");
-                        if (carToUpdate != null)
-                        {
-                            Console.Write("Enter new Brand: ");
-                            carToUpdate.Brand = Console.ReadLine();
-
-                            Console.Write("Enter new Model: ");
-                            carToUpdate.Model = Console.ReadLine();
-
-                            rest.Put(carToUpdate, "car");
-                            Console.WriteLine("Car updated successfully!");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Car not found!");
-                        }
-                        break;
-
-                    case "Customer":
-                        var customerToUpdate = rest.GetSingle<Customer>($"customer/{id}");
-                        if (customerToUpdate != null)
-                        {
-                            Console.Write("Enter new CustomerName: ");
-                            customerToUpdate.CustomerName = Console.ReadLine();
-
-                            Console.Write("Enter new CustomerEmail: ");
-                            customerToUpdate.CustomerEmail = Console.ReadLine();
-
-                            rest.Put(customerToUpdate, "customer");
-                            Console.WriteLine("Customer updated successfully!");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Customer not found!");
-                        }
-                        break;
-
-                    case "Rental":
-                        var currentRental = rest.GetSingle<Rental>($"rental/{id}");
-                        if (currentRental != null)
-                        {
-                            Console.WriteLine("Current Rental Details:");
-                            Console.WriteLine($"Car ID: {currentRental.CarId}");
-                            Console.WriteLine($"Customer ID: {currentRental.CustomerId}");
-                            Console.WriteLine($"Rental Start Date: {currentRental.RentalStart}");
-                            Console.WriteLine($"Rental End Date: {currentRental.RentalEnd}");
-
-                            var updatedRental = new Rental();
-                            updatedRental.RentalId = id;
-
-                            Console.Write("Enter new Car ID: ");
-                            if (int.TryParse(Console.ReadLine(), out int newCarId))
+                    switch (entityType)
+                    {
+                        case "Car":
+                            var carToUpdate = rest.GetSingle<Car>($"car/{id}");
+                            if (carToUpdate != null)
                             {
-                                updatedRental.CarId = newCarId;
-                            }
+                                Console.Write("Enter new Brand: ");
+                                carToUpdate.Brand = Console.ReadLine();
 
-                            Console.Write("Enter new Customer ID: ");
-                            if (int.TryParse(Console.ReadLine(), out int newCustomerId))
+                                Console.Write("Enter new Model: ");
+                                carToUpdate.Model = Console.ReadLine();
+
+                                rest.Put(carToUpdate, "car");
+                                Console.WriteLine("Car updated successfully!");
+                            }
+                            else
                             {
-                                updatedRental.CustomerId = newCustomerId;
+                                Console.WriteLine("Car not found!");
                             }
+                            break;
 
-                            Console.Write("Enter new Rental Start Date (yyyy/MM/dd): ");
-                            if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime newRentalStart))
+                        case "Customer":
+                            var customerToUpdate = rest.GetSingle<Customer>($"customer/{id}");
+                            if (customerToUpdate != null)
                             {
-                                updatedRental.RentalStart = newRentalStart;
-                            }
+                                Console.Write("Enter new CustomerName: ");
+                                customerToUpdate.CustomerName = Console.ReadLine();
 
-                            Console.Write("Enter new Rental End Date (yyyy/MM/dd): ");
-                            if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime newRentalEnd))
+                                Console.Write("Enter new CustomerEmail: ");
+                                customerToUpdate.CustomerEmail = Console.ReadLine();
+
+                                rest.Put(customerToUpdate, "customer");
+                                Console.WriteLine("Customer updated successfully!");
+                            }
+                            else
                             {
-                                updatedRental.RentalEnd = newRentalEnd;
+                                Console.WriteLine("Customer not found!");
                             }
+                            break;
 
-                            rest.Put(updatedRental, "rental");
-                            Console.WriteLine("Rental updated successfully!");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Rental with ID {id} not found.");
-                        }
-                        break;
+                        case "Rental":
+                            var currentRental = rest.GetSingle<Rental>($"rental/{id}");
+                            if (currentRental != null)
+                            {
+                                Console.WriteLine("Current Rental Details:");
+                                Console.WriteLine($"Car ID: {currentRental.CarId}");
+                                Console.WriteLine($"Customer ID: {currentRental.CustomerId}");
+                                Console.WriteLine($"Rental Start Date: {currentRental.RentalStart}");
+                                Console.WriteLine($"Rental End Date: {currentRental.RentalEnd}");
 
-                    default:
-                        Console.WriteLine("Invalid entity type!");
-                        break;
-                }
+                                var updatedRental = new Rental();
+                                updatedRental.RentalId = id;
+
+                                Console.Write("Enter new Car ID: ");
+                                if (int.TryParse(Console.ReadLine(), out int newCarId))
+                                {
+                                    updatedRental.CarId = newCarId;
+                                }
+
+                                Console.Write("Enter new Customer ID: ");
+                                if (int.TryParse(Console.ReadLine(), out int newCustomerId))
+                                {
+                                    updatedRental.CustomerId = newCustomerId;
+                                }
+
+                                Console.Write("Enter new Rental Start Date (yyyy/MM/dd): ");
+                                if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime newRentalStart))
+                                {
+                                    updatedRental.RentalStart = newRentalStart;
+                                }
+
+                                Console.Write("Enter new Rental End Date (yyyy/MM/dd): ");
+                                if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime newRentalEnd))
+                                {
+                                    updatedRental.RentalEnd = newRentalEnd;
+                                }
+
+                                rest.Put(updatedRental, "rental");
+                                Console.WriteLine("Rental updated successfully!");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Rental with ID {id} not found.");
+                            }
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid entity type!");
+                            break;
+                    }
+                }catch (Exception ex) { Console.WriteLine(ex.Message); }
             }
             else
             {
@@ -338,81 +341,83 @@ namespace TAG8GJ_HFT_2023241.Client
         {
             Console.Clear();
             Console.WriteLine($"Create {entityType}");
-
-            switch (entityType)
+            try
             {
-                case "Car":
-                    var newCar = new Car();
+                switch (entityType)
+                {
+                    case "Car":
+                        var newCar = new Car();
 
-                    Console.Write("Enter Brand: ");
-                    newCar.Brand = Console.ReadLine();
+                        Console.Write("Enter Brand: ");
+                        newCar.Brand = Console.ReadLine();
 
-                    Console.Write("Enter Model: ");
-                    newCar.Model = Console.ReadLine();
+                        Console.Write("Enter Model: ");
+                        newCar.Model = Console.ReadLine();
 
-                    Console.Write("Enter Licence Plate: ");
-                    newCar.LicencePlate = Console.ReadLine();
+                        Console.Write("Enter Licence Plate: ");
+                        newCar.LicencePlate = Console.ReadLine();
 
-                    Console.Write("Enter Year: ");
-                    if (int.TryParse(Console.ReadLine(), out int year))
-                    {
-                        newCar.Year = year;
-                    }
+                        Console.Write("Enter Year: ");
+                        if (int.TryParse(Console.ReadLine(), out int year))
+                        {
+                            newCar.Year = year;
+                        }
 
-                    Console.Write("Enter Daily Rental Cost: ");
-                    if (int.TryParse(Console.ReadLine(), out int dailyRentalCost))
-                    {
-                        newCar.DailyRentalCost = dailyRentalCost;
-                    }
+                        Console.Write("Enter Daily Rental Cost: ");
+                        if (int.TryParse(Console.ReadLine(), out int dailyRentalCost))
+                        {
+                            newCar.DailyRentalCost = dailyRentalCost;
+                        }
 
-                    rest.Post(newCar, "car");
-                    Console.WriteLine("Car created successfully!");
-                    break;
+                        rest.Post(newCar, "car");
+                        Console.WriteLine("Car created successfully!");
+                        break;
 
-                case "Customer":
-                    var newCustomer = new Customer();
-                    Console.Write("Enter CustomerName: ");
-                    newCustomer.CustomerName = Console.ReadLine();
-                    Console.Write("Enter CustomerEmail: ");
-                    newCustomer.CustomerEmail = Console.ReadLine();
-                    Console.Write("Enter CustomerPhone: ");
-                    newCustomer.CustomerPhone = Console.ReadLine();
-                    
-                    rest.Post(newCustomer, "customer");
-                    Console.WriteLine("Customer created successfully!");
-                    break;
+                    case "Customer":
+                        var newCustomer = new Customer();
+                        Console.Write("Enter CustomerName: ");
+                        newCustomer.CustomerName = Console.ReadLine();
+                        Console.Write("Enter CustomerEmail: ");
+                        newCustomer.CustomerEmail = Console.ReadLine();
+                        Console.Write("Enter CustomerPhone: ");
+                        newCustomer.CustomerPhone = Console.ReadLine();
 
-                case "Rental":
-                    var newRental = new Rental();
-                    Console.Write("Enter Car ID: ");
-                    if (int.TryParse(Console.ReadLine(), out int carId))
-                    {
-                        newRental.CarId = carId;
-                    }
-                    Console.Write("Enter Customer ID: ");
-                    if (int.TryParse(Console.ReadLine(), out int customerId))
-                    {
-                        newRental.CustomerId = customerId;
-                    }
-                    Console.Write("Enter Rental Start Date (yyyy/MM/dd): ");
-                    if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime rentalStart))
-                    {
-                        newRental.RentalStart = rentalStart;
-                    }
-                    Console.Write("Enter Rental End Date (yyyy/MM/dd): ");
-                    if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime rentalEnd))
-                    {
-                        newRental.RentalEnd = rentalEnd;
-                    }
-                    
-                    rest.Post(newRental, "rental");
-                    Console.WriteLine("Rental created successfully!");
-                    break;
+                        rest.Post(newCustomer, "customer");
+                        Console.WriteLine("Customer created successfully!");
+                        break;
 
-                default:
-                    Console.WriteLine("Invalid entity type!");
-                    break;
-            }
+                    case "Rental":
+                        var newRental = new Rental();
+                        Console.Write("Enter Car ID: ");
+                        if (int.TryParse(Console.ReadLine(), out int carId))
+                        {
+                            newRental.CarId = carId;
+                        }
+                        Console.Write("Enter Customer ID: ");
+                        if (int.TryParse(Console.ReadLine(), out int customerId))
+                        {
+                            newRental.CustomerId = customerId;
+                        }
+                        Console.Write("Enter Rental Start Date (yyyy/MM/dd): ");
+                        if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime rentalStart))
+                        {
+                            newRental.RentalStart = rentalStart;
+                        }
+                        Console.Write("Enter Rental End Date (yyyy/MM/dd): ");
+                        if (DateTime.TryParseExact(Console.ReadLine(), "yyyy/MM/dd", null, System.Globalization.DateTimeStyles.None, out DateTime rentalEnd))
+                        {
+                            newRental.RentalEnd = rentalEnd;
+                        }
+
+                        rest.Post(newRental, "rental");
+                        Console.WriteLine("Rental created successfully!");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid entity type!");
+                        break;
+                }
+            }catch(Exception ex) { Console.WriteLine(ex.Message); }
 
             Console.ReadLine(); 
         }
