@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 
@@ -29,7 +30,7 @@ namespace TAG8GJ_HFT_2023241.Models
 
         [Range(0, 300000)]
         public int DailyRentalCost { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<Rental> Rentals { get; set; }
 
 
