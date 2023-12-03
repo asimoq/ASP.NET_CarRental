@@ -53,18 +53,50 @@ namespace TAG8GJ_HFT_2023241.Logic
         //non CRUD
 
         public decimal CalculateRentalCost(int rentalId)
-    {
-        var rental = repo.Read(rentalId);
-
-        if (rental == null)
         {
-            throw new ArgumentException($"No rental found with ID: {rentalId}");
+            var rental = repo.Read(rentalId);
+
+            if (rental == null)
+            {
+                throw new ArgumentException($"No rental found with ID: {rentalId}");
+            }
+
+            int rentalDuration = (int)(rental.RentalEnd - rental.RentalStart).TotalDays + 1;
+            decimal dailyRentalCost = rental.Car.DailyRentalCost;
+
+            return rentalDuration * dailyRentalCost;
         }
 
-        int rentalDuration = (int)(rental.RentalEnd - rental.RentalStart).TotalDays + 1;
-        decimal dailyRentalCost = rental.Car.DailyRentalCost;
+        public string MostFrequentlyRentedCar()
+        {
+            var mostFrequentCarId = repo.ReadAll()
+                .GroupBy(r => r.CarId)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefault();
 
-        return rentalDuration * dailyRentalCost;
-    }
+            if (mostFrequentCarId != 0)
+            {
+                var mostFrequentCar = repo.ReadAll()
+                    .Where(r => r.CarId == mostFrequentCarId)
+                    .Select(r => r.Car)
+                    .FirstOrDefault();
+
+                if (mostFrequentCar != null)
+                {
+                    StringBuilder result = new StringBuilder();
+                    result.AppendLine($"Most frequently rented car details:");
+                    result.AppendLine($"Car ID: {mostFrequentCar.CarID}");
+                    result.AppendLine($"Brand: {mostFrequentCar.Brand}");
+                    result.AppendLine($"Model: {mostFrequentCar.Model}");
+                    result.AppendLine($"Licence Plate: {mostFrequentCar.LicencePlate}");
+                    result.AppendLine($"Year: {mostFrequentCar.Year}");
+                    result.AppendLine($"Daily Rental Cost: {mostFrequentCar.DailyRentalCost}");
+                    return result.ToString();
+                }
+            }
+
+            return "No rental records found.";
+        }
     }
 }

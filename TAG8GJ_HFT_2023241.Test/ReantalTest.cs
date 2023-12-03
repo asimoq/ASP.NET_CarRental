@@ -1,6 +1,8 @@
 ﻿using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TAG8GJ_HFT_2023241.Logic;
 using TAG8GJ_HFT_2023241.Models;
 using TAG8GJ_HFT_2023241.Repository;
@@ -88,6 +90,24 @@ namespace TAG8GJ_HFT_2023241.Test
             // Act + Assert
             Assert.Throws<System.ArgumentException>(() => rentalLogic.Create(rental));
         }
+
+        [Test]
+        public void MostFrequentlyRentedCar_NoRentals_ReturnsNoRecordsFound()
+        {
+            // Arrange
+            var rentalRepoMock = new Mock<IRepository<Rental>>();
+            var rentalLogic = new RentalLogic(rentalRepoMock.Object);
+
+            // Act
+            var result = rentalLogic.MostFrequentlyRentedCar();
+
+            // Assert
+            Assert.AreEqual("No rental records found.", result);
+        }
+
+        
+
+
     }
 }
 

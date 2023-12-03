@@ -52,5 +52,12 @@ namespace TAG8GJ_HFT_2023241.Endpoint.Controllers
         {
             return this.rentalLogic.CalculateRentalCost(id);
         }
+
+        [HttpGet("MostFrequentlyRentedCar")]
+        public string MostFrequentlyRentedCar()
+        {
+            return this.rentalLogic.MostFrequentlyRentedCar();
+        }
+
     }
 }

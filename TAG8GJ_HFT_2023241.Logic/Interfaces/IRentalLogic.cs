@@ -11,5 +11,6 @@ namespace TAG8GJ_HFT_2023241.Logic
         IQueryable<Rental> ReadAll();
         void Update(Rental entity);
         decimal CalculateRentalCost(int rentalId);
+        string MostFrequentlyRentedCar();
     }
 }
