@@ -85,7 +85,7 @@ namespace TAG8GJ_HFT_2023241.Repository
                 new Rental { RentalId = 3, CarId = 3, CustomerId = 3, RentalStart = new DateTime(2023, 3, 20), RentalEnd = new DateTime(2023, 3, 25) },
                 new Rental { RentalId = 4, CarId = 4, CustomerId = 4, RentalStart = new DateTime(2023, 4, 2), RentalEnd = new DateTime(2023, 4, 6) },
                 new Rental { RentalId = 5, CarId = 5, CustomerId = 5, RentalStart = new DateTime(2023, 5, 15), RentalEnd = new DateTime(2023, 5, 20) },
-                new Rental { RentalId = 6, CarId = 6, CustomerId = 6, RentalStart = new DateTime(2023, 6, 10), RentalEnd = new DateTime(2023, 6, 15) },
+                new Rental { RentalId = 6, CarId = 1, CustomerId = 6, RentalStart = new DateTime(2023, 6, 10), RentalEnd = new DateTime(2023, 6, 15) },
                 new Rental { RentalId = 7, CarId = 7, CustomerId = 7, RentalStart = new DateTime(2023, 7, 5), RentalEnd = new DateTime(2023, 7, 10) },
                 new Rental { RentalId = 8, CarId = 8, CustomerId = 8, RentalStart = new DateTime(2023, 8, 18), RentalEnd = new DateTime(2023, 8, 22) },
                 new Rental { RentalId = 9, CarId = 9, CustomerId = 9, RentalStart = new DateTime(2023, 9, 12), RentalEnd = new DateTime(2023, 9, 18) },

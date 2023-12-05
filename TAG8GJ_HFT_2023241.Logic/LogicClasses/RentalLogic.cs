@@ -67,6 +67,40 @@ namespace TAG8GJ_HFT_2023241.Logic
             return rentalDuration * dailyRentalCost;
         }
 
+        public string GetCarWithLongestRentalDuration()
+        {
+            var carIdWithLongestDuration = repo.ReadAll()
+                .GroupBy(r => r.CarId)
+                .OrderByDescending(g => g.Sum(r => (r.RentalEnd - r.RentalStart).TotalDays))
+                .Select(g => g.Key)
+                .FirstOrDefault();
+            double duration = (repo.Read(carIdWithLongestDuration).RentalEnd - repo.Read(carIdWithLongestDuration).RentalStart).TotalDays;
+
+            if (carIdWithLongestDuration != 0)
+            {
+                var carWithLongestDuration = repo.ReadAll()
+                    .Where(r => r.CarId == carIdWithLongestDuration)
+                    .Select(r => r.Car)
+                    .FirstOrDefault();
+
+                if (carWithLongestDuration != null)
+                {
+                    StringBuilder result = new StringBuilder();
+                    result.AppendLine($"Car with the longest rental duration:");
+                    result.AppendLine($"Car ID: {carWithLongestDuration.CarID}");
+                    result.AppendLine($"Brand: {carWithLongestDuration.Brand}");
+                    result.AppendLine($"Model: {carWithLongestDuration.Model}");
+                    result.AppendLine($"Licence Plate: {carWithLongestDuration.LicencePlate}");
+                    result.AppendLine($"Year: {carWithLongestDuration.Year}");
+                    result.AppendLine($"Daily Rental Cost: {carWithLongestDuration.DailyRentalCost}");
+                    result.AppendLine($"\nDays it was rented for: {duration}");
+                    return result.ToString();
+                }
+            }
+
+            return "No rental records found.";
+        }
+
         public string MostFrequentlyRentedCar()
         {
             var mostFrequentCarId = repo.ReadAll()

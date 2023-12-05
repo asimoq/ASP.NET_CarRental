@@ -12,5 +12,6 @@ namespace TAG8GJ_HFT_2023241.Logic
         void Update(Rental entity);
         decimal CalculateRentalCost(int rentalId);
         string MostFrequentlyRentedCar();
+        string GetCarWithLongestRentalDuration();
     }
 }

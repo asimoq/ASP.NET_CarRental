@@ -42,6 +42,7 @@ namespace TAG8GJ_HFT_2023241.Client
                .Add("Update", () => Update("Rental"))
                .Add("Calculate Rental Cost", () => CalculateRentalCost())
                .Add("Most Frequently Rented Car", () => MostFrequentlyRentedCar())
+               .Add("Car with the Longest Rental Duration", () => GetCarWithLongestRentalDuration())
                .Add("Exit", ConsoleMenu.Close);
 
 
@@ -59,6 +60,21 @@ namespace TAG8GJ_HFT_2023241.Client
             try
             {
                 string result = rest.GetSingle<string>("rental/MostFrequentlyRentedCar");
+                Console.WriteLine(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+            Console.ReadLine();
+        }
+
+        private static void GetCarWithLongestRentalDuration()
+        {
+            try
+            {
+                string result = rest.GetSingle<string>("rental/GetCarWithLongestRentalDuration");
                 Console.WriteLine(result);
             }
             catch (Exception ex)
