@@ -1,0 +1,23 @@
+﻿@model List<TAG8GJ_HFT_2023241.Models.Car>
+
+
+<ul>
+	@{
+		foreach (var item in Model)
+		{
+			<li>@item.Brand</li>
+			<ul>
+			@{foreach (var rental in item.Rentals)
+				{
+					<li>@rental.Customer.CustomerName @rental.RentalStart.Date-@rental.RentalEnd.Date</li>
+				}
+			}
+			</ul>
+			
+		}
+
+	}
+
+
+</ul>
+
