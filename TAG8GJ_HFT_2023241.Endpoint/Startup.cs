@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TAG8GJ_HFT_2023241.Endpoint.Services;
 using TAG8GJ_HFT_2023241.Logic;
 using TAG8GJ_HFT_2023241.Models;
 using TAG8GJ_HFT_2023241.Repository;
@@ -39,6 +40,8 @@ namespace TAG8GJ_HFT_2023241.Endpoint
             services.AddTransient<ICarLogic, CarLogic>();
             services.AddTransient<ICustomerLogic, CustomerLogic>();
             services.AddTransient<IRentalLogic, RentalLogic>();
+
+            services.AddSignalR();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -75,6 +78,7 @@ namespace TAG8GJ_HFT_2023241.Endpoint
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<SignalRHub>("/hub");
             });
         }
     }

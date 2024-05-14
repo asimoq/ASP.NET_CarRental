@@ -1,0 +1,113 @@
+﻿<Window x:Class="TAG8GJ_HFT_2023241.WPF_Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TAG8GJ_HFT_2023241.WPF_Client"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="850" Width="800">
+
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Cars Section -->
+        <GroupBox Header="Cars" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Cars ListBox -->
+                <ListBox Grid.Column="0" ItemsSource="{Binding Cars}" DisplayMemberPath="Model" SelectedItem="{Binding SelectedCar}" Margin="5"/>
+
+                <!-- Buttons for Cars -->
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">
+                    <TextBox x:Name="BrandInput" Text="{Binding SelectedCar.Brand, Mode=TwoWay}" ToolTip="Brand" Margin="0,0,0,5"/>
+                    <TextBox x:Name="ModelInput" Text="{Binding SelectedCar.Model, Mode=TwoWay}" ToolTip="Model" Margin="0,0,0,5"/>
+                    <TextBox x:Name="LicencePlateInput" Text="{Binding SelectedCar.LicencePlate, Mode=TwoWay}" ToolTip="Licence Plate" Margin="0,0,0,5"/>
+                    <TextBox x:Name="YearInput" Text="{Binding SelectedCar.Year, Mode=TwoWay}" ToolTip="Year" Margin="0,0,0,5"/>
+                    <TextBox x:Name="DailyRentalCostInput" Text="{Binding SelectedCar.DailyRentalCost, Mode=TwoWay}" ToolTip="Daily Rental Cost" Margin="0,0,0,5"/>
+                    <Button Content="Create" Command="{Binding CreateCarCommand}" Margin="0,0,0,5"/>
+                    <Button Content="Update" Command="{Binding UpdateCarCommand}" Margin="0,0,0,5" />
+                    <Button Content="Delete" Command="{Binding DeleteCarCommand}" Margin="0,0,0,5" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        
+        <!-- Customers Section -->
+        <GroupBox Header="Customers" Grid.Row="1" Grid.Column="0" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Customers ListBox -->
+                <ListBox Grid.Column="0" ItemsSource="{Binding Customers}" DisplayMemberPath="CustomerName" SelectedItem="{Binding SelectedCustomer}" Margin="5"/>
+
+                <!-- Buttons for Customers -->
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">
+                    <TextBox x:Name="CustomerNameInput" Text="{Binding SelectedCustomer.CustomerName, Mode=TwoWay}" ToolTip="Customer Name" Margin="0,0,0,5"/>
+                    <TextBox x:Name="CustomerEmailInput" Text="{Binding SelectedCustomer.CustomerEmail, Mode=TwoWay}" ToolTip="Email" Margin="0,0,0,5"/>
+                    <TextBox x:Name="CustomerPhoneInput" Text="{Binding SelectedCustomer.CustomerPhone, Mode=TwoWay}" ToolTip="Phone" Margin="0,0,0,5"/>
+                    <Button Content="Create" Command="{Binding CreateCustomerCommand}" Margin="0,0,0,5"/>
+                    <Button Content="Update" Command="{Binding UpdateCustomerCommand}" Margin="0,0,0,5" />
+                    <Button Content="Delete" Command="{Binding DeleteCustomerCommand}" Margin="0,0,0,5" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <!-- Rentals Section -->
+        <GroupBox Header="Rentals" Grid.Row="1" Grid.Column="1" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Rentals ListBox -->
+                <ListBox Grid.Column="0" ItemsSource="{Binding Rentals}" DisplayMemberPath="RentalStart" SelectedItem="{Binding SelectedRental}" Margin="5"/>
+
+                <!-- Buttons for Rentals -->
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">
+                    <TextBox x:Name="RentalStartInput" Text="{Binding SelectedRental.RentalStart, Mode=TwoWay}" ToolTip="Rental Start" Margin="0,0,0,5"/>
+                    <TextBox x:Name="RentalEndInput" Text="{Binding SelectedRental.RentalEnd, Mode=TwoWay}" ToolTip="Rental Start" Margin="0,0,0,5"/>
+                    <TextBox x:Name="CustomerName" Text="{Binding SelectedRental.Customer.CustomerName, Mode=OneWay}" ToolTip="Rental Start" Margin="0,0,0,5" IsEnabled="False"/>
+                    <TextBox x:Name="RentedCar" Text="{Binding SelectedRental.Car.Model, Mode=OneWay}" ToolTip="Rental Start" Margin="0,0,0,5" IsEnabled="False"/>
+                    <Button Content="Create" Command="{Binding CreateRentalCommand}" Margin="0,0,0,5"/>
+                    <Button Content="Update" Command="{Binding UpdateRentalCommand}" Margin="0,0,0,5" />
+                    <Button Content="Delete" Command="{Binding DeleteRentalCommand}" Margin="0,0,0,5" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <!-- Non-CRUD  -->
+        <GroupBox Header="Non-CRUD Methods" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10">
+            <StackPanel Margin="5">
+                <TextBox x:Name="RentalCostInput" Text="{Binding RentalCostInput, Mode=TwoWay}" ToolTip="Enter Rental Cost" Margin="0,0,0,5"/>
+                <Button Content="Cars Below Certain Cost" Command="{Binding CarsBelowCertainCostCommand}" Margin="0,0,0,5"/>
+                <ListBox ItemsSource="{Binding CarsBelowCertainCostResult}" DisplayMemberPath="Model" Margin="0,10,0,5" Background="RoyalBlue"/>
+
+                <Button Content="Most Frequently Rented Car" Command="{Binding MostFrequentlyRentedCarRentalCommand}" Margin="0,10,0,5"/>
+                <Label Content="{Binding MostFrequentlyRentedCarResult}" Margin="0,10,0,5" Background="RoyalBlue"/>
+
+                <Button Content="Get Car With Longest Rental Duration" Command="{Binding GetCarWithLongestRentalDurationRentalCommand}" Margin="0,10,0,5"/>
+                <Label Content="{Binding GetCarWithLongestRentalDurationResult}" Margin="0,10,0,5" Background="RoyalBlue"/>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</Window>
